@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Web Project</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #f0f4ff, #ffffff);
+      color: #333;
+    }
+
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      background-color: #0059b3;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    nav {
+      background-color: #003f7d;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 1rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #ffdd57;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      padding: 2rem;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .card:hover,
+    .card.touch-hover {
+      transform: scale(1.03);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #0059b3;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.75rem 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #0059b3;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #004080;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.9rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #eaf4ff;
+      padding: 0.75rem 1rem;
+      margin: 0.5rem 0;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1rem;
+    }
+
+    .remove-btn {
+      background: #c00;
+      border: none;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      font-size: 14px;
+      line-height: 22px;
+      text-align: center;
+      cursor: pointer;
+      margin-left: 1rem;
+      padding: 0;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .remove-btn:hover {
+      background: #a00;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background-color: #003f7d;
+      color: white;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>My Interactive Web Project</h1>
+    <p>HTML | CSS | JavaScript | Responsive UI</p>
+  </header>
+
+  <nav>
+    <a href="#contact">Contact</a>
+    <a href="#todo">To-Do</a>
+  </nav>
+
+  <main class="container">
+    <!-- Contact Form Card -->
+    <section class="card" id="contact" ontouchstart="addTouchHover(this)">
+      <h2>Contact Form</h2>
+      <form id="contactForm">
+        <input type="text" id="name" placeholder="Your Name" />
+        <div id="nameError" class="error"></div>
+        <input type="email" id="email" placeholder="Your Email" />
+        <div id="emailError" class="error"></div>
+        <textarea id="message" placeholder="Your Message"></textarea>
+        <div id="messageError" class="error"></div>
+        <button type="submit">Send</button>
+        <div id="successMsg" style="color: green;"></div>
+      </form>
+    </section>
+
+    <!-- To-Do List Card -->
+    <section class="card" id="todo" ontouchstart="addTouchHover(this)">
+      <h2>To-Do List</h2>
+      <input type="text" id="taskInput" placeholder="Enter a task..." />
+      <button onclick="addTask()">Add Task</button>
+      <ul id="taskList"></ul>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Interactive Web App by Jay ✨
+  </footer>
+
+  <script>
+    // Contact Form Validation
+    document.getElementById("contactForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name");
+      const email = document.getElementById("email");
+      const message = document.getElementById("message");
+      const nameError = document.getElementById("nameError");
+      const emailError = document.getElementById("emailError");
+      const messageError = document.getElementById("messageError");
+      const successMsg = document.getElementById("successMsg");
+
+      nameError.textContent = "";
+      emailError.textContent = "";
+      messageError.textContent = "";
+      successMsg.textContent = "";
+
+      let valid = true;
+
+      if (name.value.trim() === "") {
+        nameError.textContent = "Name is required";
+        valid = false;
+      }
+
+      const emailPattern = /^\S+@\S+\.\S+$/;
+      if (!emailPattern.test(email.value)) {
+        emailError.textContent = "Invalid email";
+        valid = false;
+      }
+
+      if (message.value.trim() === "") {
+        messageError.textContent = "Message cannot be empty";
+        valid = false;
+      }
+
+      if (valid) {
+        successMsg.textContent = "Form submitted successfully!";
+        name.value = "";
+        email.value = "";
+        message.value = "";
+      }
+    });
+
+    // To-Do List Functionality
+    function addTask() {
+      const input = document.getElementById("taskInput");
+      const task = input.value.trim();
+      if (task === "") return;
+
+      const li = document.createElement("li");
+      li.textContent = task;
+
+      const btn = document.createElement("button");
+      btn.className = "remove-btn";
+      btn.textContent = "✖";
+      btn.onclick = () => li.remove();
+
+      li.appendChild(btn);
+      document.getElementById("taskList").appendChild(li);
+      input.value = "";
+    }
+
+    // Touch support for hover on mobile
+    function addTouchHover(card) {
+      card.classList.add("touch-hover");
+      setTimeout(() => card.classList.remove("touch-hover"), 600);
+    }
+  </script>
+</body>
+</html>
